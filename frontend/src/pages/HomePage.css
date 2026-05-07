@@ -1,0 +1,27 @@
+.home-page {
+  display: grid;
+  gap: 24px;
+}
+
+.home-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 2.75rem);
+}
+
+.home-header p {
+  margin: 8px 0 0;
+  color: #475569;
+  max-width: 36rem;
+}
+
+.complaint-list {
+  display: grid;
+  gap: 16px;
+}
+
+.empty-state {
+  padding: 24px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #667085;
+}

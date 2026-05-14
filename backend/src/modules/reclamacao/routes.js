@@ -1,14 +1,16 @@
 import { Router } from 'express';
-import * as userController from './controller';
+import * as complaintController from './controller.js';
 
 const router = Router();
 
-router.get('/', () => {});
+router.post('/', complaintController.create);
 
-router.post('/', userController.create);
+router.get('/read-all', complaintController.readAll);
 
-router.put('/', () => {});
+router.get('/read/:id', complaintController.readById);
 
-router.delete('/', () => {});
+router.put('/', complaintController.update);
+
+router.delete('/delete/:id', complaintController.deleteById);
 
 export default router;

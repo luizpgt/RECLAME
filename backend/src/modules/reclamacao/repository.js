@@ -1,18 +1,9 @@
-import { pool } from "../../config/database";
-
-export async function readAll() {
-    const result = await pool.query(`
-        SELECT r.*
-        FROM reclamacao r;
-    `);
-
-    return result.rows;
-}
+import { pool } from "../../config/database.js";
 
 export async function create({
-    cidadao,
-    cidade,
-    categoria,
+    cidadaoId,
+    cidadeId,
+    categoriaId,
     anexo,
     titulo,
     latitude,
@@ -21,26 +12,47 @@ export async function create({
     descricaoLocalizacao
 }) {
     const result = await pool.query(`
-            INSERT INTO reclamacao
-            (cidadao, cidade, categoria, anexo, titulo, 
+            INSERT INTO reclamacoes
+            (cidadao_id, cidade_id, categoria_id, anexo, titulo, 
             latitude, longitude, descricao, descricao_localizacao)
             VALUES
             ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             RETURNING *;
         `,
-        [cidadao, cidade, categoria, anexo, titulo, latitude, 
-        longitude, descricao, descricaoLocalizacao]
+        [cidadaoId, cidadeId, categoriaId, anexo, titulo, 
+        latitude, longitude, descricao, descricaoLocalizacao]
     );
 
     return result.rows[0];
 }
 
 
+export async function readAll() {
+    const result = await pool.query(`
+        SELECT r.*
+        FROM reclamacoes r;
+    `);
+
+    return result.rows;
+}
+
+
+export async function readById(id) {
+    const result = await pool.query(`
+        SELECT r.*
+        FROM reclamacoes r
+        WHERE r.id = $1;
+    `, id);
+
+    return result.rows.length > 0 ? result.rows[0] : null;
+}
+
+
 export async function update({
-    idReclamacao,
-    cidadao,
-    cidade,
-    categoria,
+    id,
+    cidadao_id,
+    cidade_id,
+    categoria_id,
     anexo,
     titulo,
     latitude,
@@ -49,23 +61,31 @@ export async function update({
     descricaoLocalizacao
 }) {
     const result = await pool.query(`
-            UPDATE reclamacao
+            UPDATE reclamacoes
             SET
-            cidadao = $2, 
-            cidade = $3, 
-            categoria = $4, 
+            cidadao_id = $2, 
+            cidade_id = $3, 
+            categoria_id = $4, 
             anexo = $5, 
             titulo = $6, 
             latitude = $7, 
             longitude = $8, 
             descricao = $9, 
             descricao_localizacao = $10
-            WHERE id_reclamacao = $1
+            WHERE id = $1
             RETURNING *;
         `,
-        [idReclamacao, cidadao, cidade, categoria, anexo, titulo, 
+        [id, cidadao_id, cidade_id, categoria_id, anexo, titulo, 
         latitude, longitude, descricao, descricaoLocalizacao]
     );
 
     return result.rows[0];
+}
+
+
+export async function deleteById(id) {
+    await pool.query(`
+        DELETE FROM reclamacoes
+        WHERE id = $1;
+    `, id);
 }
